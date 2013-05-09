@@ -18,8 +18,8 @@ typedef struct {
     unsigned int currentTurn;
     unsigned int roundNumber;
     unsigned int dealerID;
-    card_t deck[MAXIMUM_CARDS];
-    card_t tableCards[MAXIMUM_CARDS];
+    card_t deck[DECK_CARDS];
+    card_t tableCards[DECK_CARDS];
     
     /* Sync Variables*/
     //TODO Mutexes and stuff

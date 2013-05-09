@@ -9,29 +9,32 @@
 #define	CARD_H
 
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
 
-#define MAXIMUM_CARDS 52
+#define DECK_CARDS 52
 
-typedef struct {
-    char rank;
-    char suit;
-} card_t;
+typedef int card_t;
 
-card_t usedCard = {.rank = 'n', .suit = 'n'};
+static const card_t usedCard = -1;
 
-bool equal_cards(card_t card1, card_t card2);
+static const char *ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+static const char suits[] = { 'c', 'd', 'h', 's' };
 
-card_t* start_deck(card_t* deck);
+void start_deck(card_t deck[]);
 
-void shuffle_deck(card_t* deck);
+int deck_size(card_t deck[]);
 
-int deck_size(card_t* deck);
+bool deck_empty(card_t deck[]);
 
-bool deck_empty(card_t* deck);
+void shuffle_deck(card_t deck[]);
 
 char* get_card_representation(card_t card);
 
-void print_cards(card_t* cards);
+void print_cards(card_t cards[], int numberOfCards);
+
+bool give_hand(card_t deck[], card_t hand[], int cardsToGive);
 
 #endif	/* CARD_H */
 
