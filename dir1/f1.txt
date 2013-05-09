@@ -1,3 +1,0 @@
-this is file number 1!
-i was modified at interval 1!
-i was modified at interval 4!
