@@ -1,5 +1,11 @@
 #include "card.h"
 
+void initialize_with_usedCard(card_t cards[], int numberOfCards) {
+    int i;
+    for (i = 0; i < numberOfCards; i++)
+        cards[i] = usedCard;
+}
+
 void start_deck(card_t deck[]) {
 
     int i;
@@ -79,4 +85,10 @@ bool give_hand(card_t deck[], card_t hand[], int cardsToGive) {
         return true;
     else
         return false;
+}
+
+void copy_cards(card_t to[], card_t from[], int numberOfCards) {
+    int i;
+    for(i = 0; i < numberOfCards; i++)
+        to[i] = from[i];
 }

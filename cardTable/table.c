@@ -29,6 +29,8 @@ table_t* create_table(char* tableName, int tableSize) {
     table->currentTurn = 0;
     table->roundNumber = 0;
     table->dealerID = 0;
+    start_deck(table->deck);
+    initialize_with_usedCard(table->tableCards, DECK_CARDS);
 
     return (table_t *) table;
 }
@@ -50,6 +52,32 @@ table_t* attach_table(char* tableName, int tableSize) {
         return NULL;
     }
     return (table_t *) table;
+}
+
+bool init_sync_variables_in_table(table_t* table) {
+    pthread_mutexattr_t tableAccessAttr;
+    
+    if(pthread_mutexattr_init(&tableAccessAttr) != 0)
+        return false;
+    
+    if(pthread_mutexattr_setpshared(&tableAccessAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_mutex_init(&table->tableAccessLock, &tableAccessAttr) != 0)
+        return false;
+    
+    pthread_condattr_t turnChangeAttr;
+    
+    if(pthread_condattr_init(&turnChangeAttr) != 0)
+        return false;
+    
+    if(pthread_condattr_setpshared(&turnChangeAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_cond_init(&table->turnChangeCond, &turnChangeAttr) != 0)
+        return false;
+    
+    return true;
 }
 
 void destroy_table(table_t* table, char* tableName, int tableSize) {

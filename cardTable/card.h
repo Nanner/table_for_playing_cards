@@ -36,5 +36,7 @@ void print_cards(card_t cards[], int numberOfCards);
 
 bool give_hand(card_t deck[], card_t hand[], int cardsToGive);
 
+void copy_cards(card_t to[], card_t from[], int numberOfCards);
+
 #endif	/* CARD_H */
 

@@ -10,6 +10,7 @@
 
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <pthread.h>
 
 #include "player.h"
 #include "card.h"
@@ -26,11 +27,15 @@ typedef struct {
     
     /* Sync Variables*/
     //TODO Mutexes and stuff
+    pthread_mutex_t tableAccessLock;
+    pthread_cond_t turnChangeCond;
 } table_t;
 
 table_t* create_table(char* tableName, int tableSize);
 
 table_t* attach_table(char* tableName, int tableSize);
+
+bool init_sync_variables_in_table(table_t* table);
 
 void destroy_table(table_t* table, char* tableName, int tableSize);
 
