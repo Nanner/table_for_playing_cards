@@ -8,6 +8,9 @@
 #ifndef TABLE_H
 #define	TABLE_H
 
+#include <fcntl.h>
+#include <sys/mman.h>
+
 #include "player.h"
 #include "card.h"
 
@@ -24,6 +27,12 @@ typedef struct {
     /* Sync Variables*/
     //TODO Mutexes and stuff
 } table_t;
+
+table_t* create_table(char* tableName, int tableSize);
+
+table_t* attach_table(char* tableName, int tableSize);
+
+void destroy_table(table_t* table, char* tableName, int tableSize);
 
 #endif	/* TABLE_H */
 
