@@ -9,6 +9,8 @@
 
 #define TABLE_READY_SEM "/table_ready"
 
+static int isDealer = 0;
+
 static table_t* table;
 static sem_t* table_ready;
 static pthread_mutex_t syncMut = PTHREAD_MUTEX_INITIALIZER;
@@ -29,8 +31,8 @@ void* game_interface(void* arg) {
         printf("What would you like to do?\n");
         printf("0- Exit\n1- Check current turn\n2- View cards on table\n");
         getchar();
-
-        //pthread_mutex_lock(&syncMut);
+        
+        pthread_mutex_lock(&syncMut);
         pthread_mutex_lock(&table->tableAccessLock);
         printf("Game interface: Current turn before: %d\n", table->currentTurn);
         table->currentTurn += 1;
@@ -45,43 +47,46 @@ void* game_interface(void* arg) {
         pthread_cond_broadcast(&table->turnChangeCond);
         printf("Broadcast done\n");
         pthread_mutex_unlock(&table->tableAccessLock);
+        pthread_mutex_unlock(&syncMut);
     }
     printf("Ready to exit\n");
-   // pthread_mutex_unlock(&syncMut);
-    
-    getchar();
+
     return NULL;
 }
 
 void* game_sync(void* arg) {
     while (1) {
-        
+
         pthread_mutex_lock(&table->tableAccessLock);
-        printf("lol");
+        printf("Locked mutex at game_sync\n");
         while (currentTurn == table->currentTurn) {
-            
+
             printf("currentTurn didn't change: %d\n", table->currentTurn);
-            
-            if(pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0)
+
+            printf("Entering wait\n");
+            if (pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0)
                 printf("Wtf\n");
+            printf("Exiting wait\n");
         }
         currentTurn = table->currentTurn;
         pthread_mutex_unlock(&table->tableAccessLock);
+        printf("unlocked mutex at game_sync\n");
+
+        //TODO remove printf crap
+         printf("HOLY CRAP IT WAS BROADCASTED\n");
         
-       /* printf("HOLY CRAP IT WAS BROADCASTED\n");
-        
-        pthread_mutex_lock(&table->tableAccessLock);
-        pthread_mutex_lock(&syncMut);
-        printf("Current turn before: %d", currentTurn);
-        currentTurn = table->currentTurn;
-        printf("Current turn after: %d", currentTurn);
-        if (roundNumber < table->roundNumber) {
-            printf("New round! Current round: %d", table->roundNumber);
-            roundNumber = table->roundNumber;
-        }
-        copy_cards(tableCards, table->tableCards, DECK_CARDS);
-        pthread_mutex_unlock(&syncMut);
-        pthread_mutex_unlock(&table->tableAccessLock);*/
+         pthread_mutex_lock(&table->tableAccessLock);
+         pthread_mutex_lock(&syncMut);
+         printf("Current turn before: %d", currentTurn);
+         currentTurn = table->currentTurn;
+         printf("Current turn after: %d", currentTurn);
+         if (roundNumber < table->roundNumber) {
+             printf("New round! Current round: %d", table->roundNumber);
+             roundNumber = table->roundNumber;
+         }
+         copy_cards(tableCards, table->tableCards, DECK_CARDS);
+         pthread_mutex_unlock(&syncMut);
+         pthread_mutex_unlock(&table->tableAccessLock);
     }
     return NULL;
 }
@@ -94,7 +99,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (strcmp(argv[1], "s") == 0) {
-
+        isDealer = 1;
         printf("Starting server (dealer)\n");
 
         table_ready = sem_open(TABLE_READY_SEM, O_CREAT, 0600, 0);
@@ -105,6 +110,11 @@ int main(int argc, char *argv[]) {
 
         if ((table = create_table("table1", sizeof (table_t))) == NULL) {
             perror("Dealer: Could not create table");
+            exit(EXIT_FAILURE);
+        }
+        
+        if(!init_sync_variables_in_table(table)) {
+            printf("Failed to initialize the table sync variables!\n");
             exit(EXIT_FAILURE);
         }
 
@@ -120,26 +130,26 @@ int main(int argc, char *argv[]) {
         printf("\n\n");
 
         initialize_local_variables();
-        
+
         int playerID = table->numberOfPlayers;
         table->numberOfPlayers++;
         initialize_with_usedCard(tableCards, DECK_CARDS);
-        
+
         sem_post(table_ready);
-        
+
         printf("Opening threads:\n");
         printf("Gamesync thread\n");
-        
+
         pthread_t tidSync, tidInterface;
         pthread_create(&tidSync, NULL, game_sync, NULL);
-        
+
         printf("Interface thread\n");
         pthread_create(&tidInterface, NULL, game_interface, NULL);
-        
-        pthread_join(tidInterface, NULL); 
+
+        pthread_join(tidInterface, NULL);
         //pthread_join(tidSync, NULL); 
-        
-        
+
+
         printf("Press enter to leave\n");
         getchar();
 
@@ -164,19 +174,19 @@ int main(int argc, char *argv[]) {
             perror("Player: Could not open table");
             exit(EXIT_FAILURE);
         }
-        
+
         initialize_local_variables();
-        
+
         int playerID = table->numberOfPlayers;
         table->numberOfPlayers++;
         initialize_with_usedCard(tableCards, DECK_CARDS);
-        
+
         printf("Opening threads:\n");
         printf("Gamesync thread\n");
-        
+
         pthread_t tidSync, tidInterface;
         pthread_create(&tidSync, NULL, game_sync, NULL);
-        
+
         printf("Interface thread\n");
         pthread_create(&tidInterface, NULL, game_interface, NULL);
 
@@ -197,8 +207,8 @@ int main(int argc, char *argv[]) {
         print_cards(table->deck, DECK_CARDS);
         printf("\n\n");*/
         sem_post(table_ready);
-        
-        pthread_join(tidInterface, NULL); 
+
+        pthread_join(tidInterface, NULL);
         //pthread_join(tidSync, NULL); 
 
         printf("Press enter to quit\n");
