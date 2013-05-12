@@ -77,6 +77,39 @@ bool init_sync_variables_in_table(table_t* table) {
     if(pthread_cond_init(&table->turnChangeCond, &turnChangeAttr) != 0)
         return false;
     
+    pthread_mutexattr_t broadcastLockAttr;
+    
+    if(pthread_mutexattr_init(&broadcastLockAttr) != 0)
+        return false;
+    
+    if(pthread_mutexattr_setpshared(&broadcastLockAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_mutex_init(&table->broadcastLock, &broadcastLockAttr) != 0)
+        return false;
+    
+    pthread_mutexattr_t playerWaitAttr;
+    
+    if(pthread_mutexattr_init(&playerWaitAttr) != 0)
+        return false;
+    
+    if(pthread_mutexattr_setpshared(&playerWaitAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_mutex_init(&table->playerWaitLock, &playerWaitAttr) != 0)
+        return false;
+    
+    pthread_condattr_t playerWaitCondAttr;
+    
+    if(pthread_condattr_init(&playerWaitCondAttr) != 0)
+        return false;
+    
+    if(pthread_condattr_setpshared(&playerWaitCondAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_cond_init(&table->playerWaitCond, &playerWaitCondAttr) != 0)
+        return false;
+    
     return true;
 }
 

@@ -27,8 +27,11 @@ typedef struct {
     
     /* Sync Variables*/
     //TODO Mutexes and stuff
+    pthread_mutex_t broadcastLock;
     pthread_mutex_t tableAccessLock;
     pthread_cond_t turnChangeCond;
+    pthread_mutex_t playerWaitLock;
+    pthread_cond_t playerWaitCond;
 } table_t;
 
 table_t* create_table(char* tableName, int tableSize);
