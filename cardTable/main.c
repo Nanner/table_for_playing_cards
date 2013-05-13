@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
         
-        printf("Waiting for %d players...", playersAwaited);
+        printf("Waiting for %d players...\n", playersAwaited);
         pthread_mutex_lock(&table->playerWaitLock);
         while (table->numberOfPlayers < playersAwaited)
             pthread_cond_wait(&table->playerWaitCond, &table->playerWaitLock);
