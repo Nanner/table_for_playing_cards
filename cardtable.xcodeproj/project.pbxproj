@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EB5F27351743985C00B17D6E /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		EB77B436174134CF0014648F /* cardtable */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cardtable; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB77B4431741352D0014648F /* card.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = card.c; sourceTree = "<group>"; };
 		EB77B4441741352D0014648F /* card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = card.h; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				EB77B44C174135760014648F /* main.c */,
+				EB5F27351743985C00B17D6E /* main.h */,
 				EB77B4431741352D0014648F /* card.c */,
 				EB77B4441741352D0014648F /* card.h */,
 				EB77B4451741352D0014648F /* player.c */,
