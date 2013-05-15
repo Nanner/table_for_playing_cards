@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
         player.id = playerID;
         initialize_local_variables();
         
-        if(fifoFD = create_player_fifo(player.fifoName) == -1) {
+        if( (fifoFD = create_player_fifo(player.fifoName)) == -1) {
             printf("Problem creating the player fifo!\n");
             exit(EXIT_FAILURE);
         }

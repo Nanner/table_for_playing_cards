@@ -38,5 +38,7 @@ bool give_hand(card_t deck[], card_t hand[], int cardsToGive);
 
 void copy_cards(card_t to[], card_t from[], int numberOfCards);
 
+void initialize_with_usedCard(card_t cards[], int numberOfCards);
+
 #endif	/* CARD_H */
 

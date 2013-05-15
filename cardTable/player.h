@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include <sys/file.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "card.h"
 
 #define MAX_STRING_LENGTH 1024

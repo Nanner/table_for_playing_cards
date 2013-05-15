@@ -30,7 +30,7 @@ bool deck_empty(card_t deck[]) {
 }
 
 void shuffle_deck(card_t deck[]) {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     int deckSize = deck_size(deck);
 
     if (deckSize > 1) {
@@ -81,7 +81,7 @@ bool give_hand(card_t deck[], card_t hand[], int cardsToGive) {
         }
     }
 
-    if (j = cardsToGive - 1)
+    if (j == cardsToGive - 1)
         return true;
     else
         return false;

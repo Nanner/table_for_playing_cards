@@ -11,6 +11,8 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <pthread.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include "player.h"
 #include "card.h"
