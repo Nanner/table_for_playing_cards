@@ -1,32 +1,24 @@
-// PROGRAMA p01.c 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <semaphore.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <string.h>
+#include "main.h"
 
-#include "table.h"
-
-#define TABLE_READY_SEM "/table_ready2"
-#define MAX_LEN 1024
-
-static int playerID;
-static player_t player;
-static bool isDealer = false;
-
-static table_t* table;
-static sem_t* table_ready;
-static pthread_mutex_t syncMut = PTHREAD_MUTEX_INITIALIZER;
-static int fifoFD;
-
-static unsigned int playersAwaited;
-static unsigned int currentTurn;
-static unsigned int roundNumber;
-static card_t tableCards[DECK_CARDS];
-static card_t handCards[HAND_CARDS];
-//static player_t players[10];
+void sigint_handler(int signo) {
+    if (isDealer) {
+        sem_close(table_ready);
+        sem_unlink(TABLE_READY_SEM);
+        
+        destroy_table(table, tableName, sizeof (table_t));
+        printf("Cleaning dealer variables for shutdown.\n");
+        exit(0);
+    } else {
+        sem_close(table_ready);
+        
+        if (munmap(table, sizeof (table_t)) < 0) {
+            perror("Failure in munmap()");
+            exit(EXIT_FAILURE);
+        }
+        printf("Cleaning player variables for shutdown.\n");
+        exit(0);
+    }
+}
 
 void initialize_local_variables() {
     currentTurn = table->currentTurn;
@@ -164,7 +156,16 @@ int main(int argc, char *argv[]) {
 
     strcpy(player.nickname, argv[1]);
     strcpy(player.fifoName, argv[1]);
+    strcpy(tableName, argv[2]);
     playersAwaited = atoi(argv[3]);
+    
+    /*
+    table_ready = sem_open(TABLE_READY_SEM, O_CREAT , 0600, 0);
+    sem_close(table_ready);
+    sem_unlink(TABLE_READY_SEM);
+    destroy_table(table, tableName, sizeof (table_t));
+    return 0;
+     */
 
     table_ready = sem_open(TABLE_READY_SEM, O_CREAT | O_EXCL, 0600, 0);
     if (table_ready == SEM_FAILED) {
@@ -177,7 +178,18 @@ int main(int argc, char *argv[]) {
         isDealer = true;
         printf("You are the dealer!\n");
     }
-
+    
+    // install handlers
+    // install sigusr1 handler
+    struct sigaction action;
+    action.sa_handler = sigint_handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    if (sigaction(SIGINT, &action, NULL) < 0) {
+        fprintf(stderr, "Unable to install SIGINT handler\n");
+        exit(7);
+    }
+    
     if (isDealer) {
         
         if ((table = create_table(argv[2], sizeof (table_t))) == NULL) {
@@ -255,7 +267,7 @@ int main(int argc, char *argv[]) {
         pthread_mutex_unlock(&table->playerWaitLock);
            
     }
-
+    
     initialize_with_usedCard(tableCards, DECK_CARDS);
 
     printf("Opening threads:\n");
@@ -278,7 +290,7 @@ int main(int argc, char *argv[]) {
         sem_close(table_ready);
         sem_unlink(TABLE_READY_SEM);
 
-        destroy_table(table, argv[2], sizeof (table_t));
+        destroy_table(table, tableName, sizeof (table_t));
     } else {
         sem_close(table_ready);
 
