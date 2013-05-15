@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <sys/file.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include "card.h"
 

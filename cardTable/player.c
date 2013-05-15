@@ -4,11 +4,15 @@ int create_player_fifo(char* fifoName) {
     int fd;
     
     if(mkfifo(fifoName, 0660) != 0) {
-        perror("Problem making fifo.");
+        perror("Problem making fifo");
         return -1;
     }
     
-    fd = open(fifoName, O_RDONLY);
+    //TODO why does it only work with O_NONBLOCK?
+    if( (fd = open(fifoName, O_RDONLY | O_NONBLOCK)) == -1) {
+        perror("Problem opening fifo");
+        return -1;
+    }
     
     return fd;
 }

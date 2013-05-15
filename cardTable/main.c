@@ -9,7 +9,7 @@
 
 #include "table.h"
 
-#define TABLE_READY_SEM "/table_ready2"
+#define TABLE_READY_SEM "/table_ready"
 #define MAX_LEN 1024
 
 static int playerID;
@@ -60,10 +60,14 @@ void* game_interface(void* arg) {
         printf("\nPlayer %d, what would you like to do?\n", playerID);
         printf("0- Exit\n1- Check current turn\n2- View cards on table\n");
 
-        if (currentTurn == playerID)
+        int option;
+        
+        if (currentTurn == playerID) {
             printf("3- Play a card\n");
-
-        int option = getChoice("> ", 3);
+            option = getChoice("> ", 3);
+        }
+        else
+            option = getChoice("> ", 2);
 
         switch (option) {
             case 0:
@@ -83,28 +87,28 @@ void* game_interface(void* arg) {
                     printf("There are no cards on the table!\n");
                 break;
             case 3:
-                printf("Gonna wait for table lock at case 3\n");
+                //printf("Gonna wait for table lock at case 3\n");
                 pthread_mutex_lock(&table->tableAccessLock);
-                printf("Gonna wait for syncMut\n");
+                //printf("Gonna wait for syncMut\n");
                 pthread_mutex_lock(&syncMut);
-                printf("I have the table access lock at case3 \n");
-                printf("Game interface: Current turn before: %d\n", table->currentTurn);
+                //printf("I have the table access lock at case3 \n");
+                //printf("Game interface: Current turn before: %d\n", table->currentTurn);
                 table->currentTurn += 1;
                 currentTurn++;
-                printf("Current turn up\n");
-                printf("Game interface: Current turn after: %d\n", table->currentTurn);
+                //printf("Current turn up\n");
+                //printf("Game interface: Current turn after: %d\n", table->currentTurn);
                 if (table->currentTurn >= table->numberOfPlayers) {
                     table->roundNumber++;
                     table->currentTurn = 0;
                 }
                 copy_cards(table->tableCards, tableCards, DECK_CARDS);
-                printf("Broadcasting\n");
+                //printf("Broadcasting\n");
                 pthread_cond_broadcast(&table->turnChangeCond);
-                printf("Broadcast done\n");
+                //printf("Broadcast done\n");
                 pthread_mutex_unlock(&syncMut);
-                printf("Unlocked syncMut\n");
+                //printf("Unlocked syncMut\n");
                 pthread_mutex_unlock(&table->tableAccessLock);
-                printf("I lost the table access lock at case3 \n");
+                //printf("I lost the table access lock at case3 \n");
                 
                 break;
             default:
@@ -121,36 +125,38 @@ void* game_sync(void* arg) {
     while (1) {
 
         pthread_mutex_lock(&table->tableAccessLock);
-        printf("I have the table access lock at game_sync \n");
-        printf("Locked mutex at game_sync\n");
+        //printf("I have the table access lock at game_sync \n");
+        //printf("Locked mutex at game_sync\n");
         while (currentTurn == table->currentTurn) {
 
-            printf("currentTurn didn't change: %d\n", table->currentTurn);
+            //printf("currentTurn didn't change: %d\n", table->currentTurn);
 
-            printf("Entering wait\n");
+            //printf("Entering wait\n");
             if (pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0)
-                printf("Wtf\n");
-            printf("Exiting wait\n");
+                printf("What\n");
+            //printf("Exiting wait\n");
         }
         pthread_mutex_lock(&syncMut);
         currentTurn = table->currentTurn;
         
-        printf("unlocked mutex at game_sync\n");
+        //printf("unlocked mutex at game_sync\n");
 
         //TODO remove printf crap
-        printf("HOLY CRAP IT WAS BROADCASTED\n");
+        //printf("HOLY CRAP IT WAS BROADCASTED\n");
         
-        printf("Current turn before: %d", currentTurn);
+        //printf("Current turn before: %d", currentTurn);
         currentTurn = table->currentTurn;
-        printf("Current turn after: %d", currentTurn);
+        if(currentTurn == playerID)
+            printf("\n\nIt's your turn!\n\n");
+        //printf("Current turn after: %d", currentTurn);
         if (roundNumber < table->roundNumber) {
-            printf("New round! Current round: %d", table->roundNumber);
+            printf("\n\nNew round! Current round: %d\n\n", table->roundNumber);
             roundNumber = table->roundNumber;
         }
         copy_cards(tableCards, table->tableCards, DECK_CARDS);
         pthread_mutex_unlock(&syncMut);
         pthread_mutex_unlock(&table->tableAccessLock);
-        printf("I lost the table access lock at game_sync \n");
+        //printf("I lost the table access lock at game_sync \n");
     }
     return NULL;
 }
@@ -207,7 +213,12 @@ int main(int argc, char *argv[]) {
         
         printf("adding player...\n");
         
-        //table->players[table->numberOfPlayers - 1] = player;
+        if( (fifoFD = create_player_fifo(player.fifoName)) == -1) {
+            printf("Problem creating the player fifo!\n");
+            exit(EXIT_FAILURE);
+        }
+        
+        table->players[table->numberOfPlayers - 1] = player;
         
         printf("Toggling semaphore\n");
 
@@ -224,7 +235,9 @@ int main(int argc, char *argv[]) {
         pthread_mutex_unlock(&table->playerWaitLock);
 
     } else {
+        printf("Gonna wait\n");
         sem_wait(table_ready);
+        printf("Waited\n");
 
         if ((table = attach_table(argv[2], sizeof (table_t))) == NULL) {
             perror("Player: Could not open table");
@@ -242,6 +255,8 @@ int main(int argc, char *argv[]) {
         }
         
         table->players[table->numberOfPlayers - 1] = player;
+        
+        printf("Number of players: %d\n", table->numberOfPlayers);
         
         if(table->numberOfPlayers == playersAwaited)
             pthread_cond_broadcast(&table->playerWaitCond);
