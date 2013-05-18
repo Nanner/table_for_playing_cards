@@ -3,7 +3,7 @@
 void sigint_handler(int signo) {
     if (isDealer) {
         sem_close(table_ready);
-        sem_unlink(TABLE_READY_SEM);
+        sem_unlink(semaphoreName);
         
         destroy_table(table, tableName, sizeof (table_t));
         printf("Cleaning dealer variables for shutdown.\n");
@@ -49,12 +49,12 @@ void* game_interface(void* arg) {
     while (1) {
         printf("Your hand:\n");
         print_cards(handCards, HAND_CARDS);
-        printf("\nPlayer %d, what would you like to do?\n", playerID);
+        printf("\nPlayer %d, what would you like to do?\n", player.id);
         printf("0- Exit\n1- Check current turn\n2- View cards on table\n");
 
         int option;
         
-        if (currentTurn == playerID) {
+        if (currentTurn == player.id) {
             printf("3- Play a card\n");
             option = getChoice("> ", 3);
         }
@@ -66,7 +66,7 @@ void* game_interface(void* arg) {
                 return NULL;
                 break;
             case 1:
-                if (currentTurn != playerID)
+                if (currentTurn != player.id)
                     printf("It's player %d's turn\n", currentTurn);
                 else
                     printf("It's your turn!\n");
@@ -138,7 +138,7 @@ void* game_sync(void* arg) {
         
         //printf("Current turn before: %d", currentTurn);
         currentTurn = table->currentTurn;
-        if(currentTurn == playerID)
+        if(currentTurn == player.id)
             printf("\n\nIt's your turn!\n\n");
         //printf("Current turn after: %d", currentTurn);
         if (roundNumber < table->roundNumber) {
@@ -160,10 +160,13 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    char fifoName[MAX_LEN];
+    sprintf(fifoName, "%s_%s", argv[2], argv[1]);
     strcpy(player.nickname, argv[1]);
-    strcpy(player.fifoName, argv[1]);
+    strcpy(player.fifoName, fifoName);
     strcpy(tableName, argv[2]);
     playersAwaited = atoi(argv[3]);
+    sprintf(semaphoreName, "%s_%s", TABLE_READY_SEM, argv[2]);
     
     /*
     table_ready = sem_open(TABLE_READY_SEM, O_CREAT , 0600, 0);
@@ -173,9 +176,9 @@ int main(int argc, char *argv[]) {
     return 0;
      */
 
-    table_ready = sem_open(TABLE_READY_SEM, O_CREAT | O_EXCL, 0600, 0);
+    table_ready = sem_open(semaphoreName, O_CREAT | O_EXCL, 0600, 0);
     if (table_ready == SEM_FAILED) {
-        if (errno != EEXIST || (table_ready = sem_open(TABLE_READY_SEM, O_CREAT, 0600, 0)) == SEM_FAILED) {
+        if (errno != EEXIST || (table_ready = sem_open(semaphoreName, O_CREAT, 0600, 0)) == SEM_FAILED) {
             perror("Failure in sem_open()");
             exit(4);
         } else
@@ -219,8 +222,7 @@ int main(int argc, char *argv[]) {
         print_cards(table->deck, DECK_CARDS);
         printf("\n\n");
         
-        playerID = 0;
-        player.id = playerID;
+        player.id = 0;
         initialize_local_variables();
         
         printf("adding player...\n");
@@ -255,10 +257,11 @@ int main(int argc, char *argv[]) {
             perror("Player: Could not open table");
             exit(EXIT_FAILURE);
         }
+        
+        //TODO check if player name exists
 
-        playerID = table->numberOfPlayers;
+        player.id = table->numberOfPlayers;
         table->numberOfPlayers++;
-        player.id = playerID;
         initialize_local_variables();
         
         if( (fifoFD = create_player_fifo(player.fifoName)) == -1) {
@@ -300,6 +303,9 @@ int main(int argc, char *argv[]) {
 
     printf("Press enter to leave\n");
     getchar();
+    
+    //TODO make these variables global and put on sigint handler
+    close_player_fifo(fifoFD, fifoName);
 
     if (isDealer) {
         sem_close(table_ready);

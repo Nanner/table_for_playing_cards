@@ -31,6 +31,8 @@ int create_player_fifo(char* fifoName);
 
 int open_player_fifo(char* fifoName);
 
+int close_player_fifo(int fd, char* fifoName);
+
 void get_hand_from_fifo(int fd, card_t cardHand[]);
 
 void send_hand_to_fifo(int fd, card_t cardHand[], int numberOfCards);

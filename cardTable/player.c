@@ -29,6 +29,18 @@ int open_player_fifo(char* fifoName) {
     return fd;
 }
 
+int close_player_fifo(int fd, char* fifoName) {
+    
+    close(fd); 
+    
+    if (unlink(fifoName) < 0) {
+        printf("Error when destroying player FIFO %s\n", fifoName); 
+        return -1;
+    }
+    
+    return 0;
+}
+
 void get_hand_from_fifo(int fd, card_t cardHand[]) {
     int n = 0;
     

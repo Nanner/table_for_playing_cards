@@ -23,10 +23,10 @@
 #define TABLE_READY_SEM "/table_ready"
 #define MAX_LEN 1024
 
-static int playerID;
 static player_t player;
 static bool isDealer = false;
 
+static char semaphoreName[MAX_LEN];
 static table_t* table;
 static sem_t* table_ready;
 static pthread_mutex_t syncMut = PTHREAD_MUTEX_INITIALIZER;
