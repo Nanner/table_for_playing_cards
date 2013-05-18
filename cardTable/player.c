@@ -41,17 +41,22 @@ int close_player_fifo(int fd, char* fifoName) {
     return 0;
 }
 
-void get_hand_from_fifo(int fd, card_t cardHand[]) {
-    int n = 0;
+void get_hand_from_fifo(int fd, card_t cardHand[], int numberOfCards) {
     
-    do {
-        n = read(fd, cardHand, 1);
+    int n = read(fd, cardHand, numberOfCards * sizeof(card_t));
+    
+    if(n != numberOfCards * sizeof(card_t)) {
+        printf("Problem receiving card hand from FIFO\n");
     }
-    while (n>0);
+    
 }
 
-void send_hand_to_fifo(int fd, card_t cardHand[], int numberOfCards) {
+void send_hand_to_fifo(char* fifoName, card_t cardHand[], int numberOfCards) {
+    
+    int fd = open_player_fifo(fifoName);
     
     write(fd, cardHand, numberOfCards * sizeof(card_t));
+    
+    close(fd);
     
 }

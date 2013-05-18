@@ -24,14 +24,18 @@ typedef struct {
     unsigned int currentTurn;
     unsigned int roundNumber;
     unsigned int dealerID;
+    unsigned int cardsDealt;
     card_t deck[DECK_CARDS];
     card_t tableCards[DECK_CARDS];
-    
+
     /* Sync Variables*/
     //TODO Mutexes and stuff
-    pthread_mutex_t broadcastLock;
+    pthread_mutex_t dealingCardsLock;
+    pthread_cond_t dealingCardsCond;
+
     pthread_mutex_t tableAccessLock;
     pthread_cond_t turnChangeCond;
+    
     pthread_mutex_t playerWaitLock;
     pthread_cond_t playerWaitCond;
 } table_t;

@@ -31,6 +31,7 @@ static table_t* table;
 static sem_t* table_ready;
 static pthread_mutex_t syncMut = PTHREAD_MUTEX_INITIALIZER;
 static int fifoFD;
+char fifoName[MAX_LEN];
 
 static unsigned int playersAwaited;
 static unsigned int currentTurn;

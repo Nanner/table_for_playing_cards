@@ -29,6 +29,7 @@ table_t* create_table(char* tableName, int tableSize) {
     table->currentTurn = 0;
     table->roundNumber = 0;
     table->dealerID = 0;
+    table->cardsDealt = 0;
     start_deck(table->deck);
     initialize_with_usedCard(table->tableCards, DECK_CARDS);
 
@@ -77,17 +78,6 @@ bool init_sync_variables_in_table(table_t* table) {
     if(pthread_cond_init(&table->turnChangeCond, &turnChangeAttr) != 0)
         return false;
     
-    pthread_mutexattr_t broadcastLockAttr;
-    
-    if(pthread_mutexattr_init(&broadcastLockAttr) != 0)
-        return false;
-    
-    if(pthread_mutexattr_setpshared(&broadcastLockAttr, PTHREAD_PROCESS_SHARED) != 0)
-        return false;
-    
-    if(pthread_mutex_init(&table->broadcastLock, &broadcastLockAttr) != 0)
-        return false;
-    
     pthread_mutexattr_t playerWaitAttr;
     
     if(pthread_mutexattr_init(&playerWaitAttr) != 0)
@@ -108,6 +98,28 @@ bool init_sync_variables_in_table(table_t* table) {
         return false;
     
     if(pthread_cond_init(&table->playerWaitCond, &playerWaitCondAttr) != 0)
+        return false;
+    
+    pthread_mutexattr_t dealingCardsLockAttr;
+    
+    if(pthread_mutexattr_init(&dealingCardsLockAttr) != 0)
+        return false;
+    
+    if(pthread_mutexattr_setpshared(&dealingCardsLockAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_mutex_init(&table->dealingCardsLock, &dealingCardsLockAttr) != 0)
+        return false;
+    
+    pthread_condattr_t dealingCardsCondAttr;
+    
+    if(pthread_condattr_init(&dealingCardsCondAttr) != 0)
+        return false;
+    
+    if(pthread_condattr_setpshared(&dealingCardsCondAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_cond_init(&table->dealingCardsCond, &dealingCardsCondAttr) != 0)
         return false;
     
     return true;

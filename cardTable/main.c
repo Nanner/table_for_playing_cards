@@ -1,6 +1,8 @@
 #include "main.h"
 
 void sigint_handler(int signo) {
+    close_player_fifo(fifoFD, fifoName);
+    
     if (isDealer) {
         sem_close(table_ready);
         sem_unlink(semaphoreName);
@@ -18,6 +20,20 @@ void sigint_handler(int signo) {
         printf("Cleaning player variables for shutdown.\n");
         exit(0);
     }
+}
+
+void deal_cards() {
+    
+    int i;
+    for(i = 0; i < table->numberOfPlayers; i++) {
+        card_t hand[HAND_CARDS];
+        give_hand(table->deck, hand, HAND_CARDS);
+        printf("Giving hand:\n");
+        print_cards(hand, HAND_CARDS);
+        printf("\n");
+        send_hand_to_fifo(table->players[i].fifoName, hand, HAND_CARDS);
+    }
+    
 }
 
 void initialize_local_variables() {
@@ -159,8 +175,9 @@ int main(int argc, char *argv[]) {
         printf("Wrong usage: cardTable <player's name> <shm name> <n. players>\n");
         return -1;
     }
+    
+    //TODO check if names already exist
 
-    char fifoName[MAX_LEN];
     sprintf(fifoName, "%s_%s", argv[2], argv[1]);
     strcpy(player.nickname, argv[1]);
     strcpy(player.fifoName, fifoName);
@@ -245,8 +262,13 @@ int main(int argc, char *argv[]) {
         pthread_mutex_lock(&table->playerWaitLock);
         while (table->numberOfPlayers < playersAwaited)
             pthread_cond_wait(&table->playerWaitCond, &table->playerWaitLock);
-        //deal_cards();
+        deal_cards();
+        table->cardsDealt = 1;
+        pthread_cond_broadcast(&table->dealingCardsCond);
+        printf("Dealt cards\n");
         pthread_mutex_unlock(&table->playerWaitLock);
+        
+        get_hand_from_fifo(fifoFD, handCards, HAND_CARDS);
 
     } else {
         printf("Gonna wait\n");
@@ -274,15 +296,17 @@ int main(int argc, char *argv[]) {
         printf("Number of players: %d\n", table->numberOfPlayers);
         
         if(table->numberOfPlayers == playersAwaited)
-            pthread_cond_broadcast(&table->playerWaitCond);
+            pthread_cond_signal(&table->playerWaitCond);
         
         sem_post(table_ready);
         
         printf("Waiting for %d players...", playersAwaited);
-        pthread_mutex_lock(&table->playerWaitLock);
-        while (table->numberOfPlayers < playersAwaited)
-            pthread_cond_wait(&table->playerWaitCond, &table->playerWaitLock);
-        pthread_mutex_unlock(&table->playerWaitLock);
+        pthread_mutex_lock(&table->dealingCardsLock);
+        while (table->cardsDealt != 1)
+            pthread_cond_wait(&table->dealingCardsCond, &table->dealingCardsLock);
+        pthread_mutex_unlock(&table->dealingCardsLock);
+        
+        get_hand_from_fifo(fifoFD, handCards, HAND_CARDS);
            
     }
     
@@ -309,7 +333,7 @@ int main(int argc, char *argv[]) {
 
     if (isDealer) {
         sem_close(table_ready);
-        sem_unlink(TABLE_READY_SEM);
+        sem_unlink(semaphoreName);
 
         destroy_table(table, tableName, sizeof (table_t));
     } else {
