@@ -17,16 +17,27 @@
 #include "player.h"
 #include "card.h"
 
+#define CONTINUE_GAME 1
+#define STOP_GAME 0
+
 typedef struct {
     /* Shared Variables */
+    unsigned int gameState;
+    
     player_t players[10];
     unsigned int numberOfPlayers;
+    
     unsigned int currentTurn;
     unsigned int roundNumber;
+    
     unsigned int dealerID;
+    unsigned int firstPlayerID;
+    
     unsigned int cardsDealt;
     card_t deck[DECK_CARDS];
+    
     card_t tableCards[DECK_CARDS];
+    unsigned int numberOfCardsOnTable;
 
     /* Sync Variables*/
     //TODO Mutexes and stuff

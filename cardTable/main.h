@@ -27,19 +27,22 @@ static player_t player;
 static bool isDealer = false;
 
 static char semaphoreName[MAX_LEN];
+static char tableName[MAX_LEN];
 static table_t* table;
 static sem_t* table_ready;
 static pthread_mutex_t syncMut = PTHREAD_MUTEX_INITIALIZER;
 static int fifoFD;
-char fifoName[MAX_LEN];
+static char fifoName[MAX_LEN];
+static pthread_t tidSync, tidInterface;
 
 static unsigned int playersAwaited;
 static unsigned int currentTurn;
 static unsigned int roundNumber;
+
 static card_t tableCards[DECK_CARDS];
+static unsigned int numberOfCardsOnTable;
+
 static card_t handCards[HAND_CARDS];
-//static player_t players[10];
-static char tableName[MAX_LEN];
 
 
 #endif

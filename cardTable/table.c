@@ -25,11 +25,14 @@ table_t* create_table(char* tableName, int tableSize) {
     }
 
     //initialize data in the table structure
+    table->gameState = CONTINUE_GAME;
     table->numberOfPlayers = 1;
     table->currentTurn = 0;
     table->roundNumber = 0;
     table->dealerID = 0;
+    table->firstPlayerID = 0;
     table->cardsDealt = 0;
+    table->numberOfCardsOnTable = 0;
     start_deck(table->deck);
     initialize_with_usedCard(table->tableCards, DECK_CARDS);
 

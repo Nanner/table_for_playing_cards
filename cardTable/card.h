@@ -24,11 +24,13 @@ static const char suits[] = { 'c', 'd', 'h', 's' };
 
 void start_deck(card_t deck[]);
 
-int deck_size(card_t deck[]);
+int card_array_size(card_t deck[], int maxSize);
 
 bool deck_empty(card_t deck[]);
 
 void shuffle_deck(card_t deck[]);
+
+void reorder_cards(card_t cards[], int numberOfCards);
 
 char* get_card_representation(card_t card);
 

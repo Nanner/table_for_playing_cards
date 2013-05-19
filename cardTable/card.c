@@ -14,11 +14,11 @@ void start_deck(card_t deck[]) {
 
 }
 
-int deck_size(card_t deck[]) {
+int card_array_size(card_t deck[], int maxSize) {
     int deckSize = 0;
 
     int i;
-    for (i = 0; i < DECK_CARDS; i++)
+    for (i = 0; i < maxSize; i++)
         if (deck[i] != usedCard)
             deckSize++;
 
@@ -26,12 +26,12 @@ int deck_size(card_t deck[]) {
 }
 
 bool deck_empty(card_t deck[]) {
-    return (deck_size(deck) > 0);
+    return (card_array_size(deck, DECK_CARDS) > 0);
 }
 
 void shuffle_deck(card_t deck[]) {
     srand((unsigned int)time(NULL));
-    int deckSize = deck_size(deck);
+    int deckSize = card_array_size(deck, DECK_CARDS);
 
     if (deckSize > 1) {
         int i;
@@ -42,6 +42,28 @@ void shuffle_deck(card_t deck[]) {
             deck[i] = tmp;
         }
     }
+}
+
+void reorder_cards(card_t cards[], int numberOfCards) {
+    
+    card_t buf[numberOfCards];
+    
+    int i;
+    int j = 0;
+    for(i = 0; i < numberOfCards; i++) {
+        if(cards[i] != usedCard) {
+            buf[j] = cards[i];
+            j++;
+        }
+    }
+    
+    for(j; j < numberOfCards; j++)
+        buf[j] = usedCard;
+    
+    for(i = 0; i < numberOfCards; i++) {
+        cards[i] = buf[i];
+    }
+    
 }
 
 char* get_card_representation(card_t card) {
@@ -64,7 +86,7 @@ void print_cards(card_t cards[], int numberOfCards) {
 }
 
 bool give_hand(card_t deck[], card_t hand[], int cardsToGive) {
-    int cardsLeft = deck_size(deck);
+    int cardsLeft = card_array_size(deck, DECK_CARDS);
     if (cardsToGive > cardsLeft)
         return false;
 
