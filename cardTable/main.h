@@ -23,6 +23,8 @@
 #define TABLE_READY_SEM "/table_ready"
 #define MAX_LEN 1024
 
+static int gameState = CONTINUE_GAME;
+
 static player_t player;
 static bool isDealer = false;
 

@@ -24,6 +24,7 @@ typedef struct {
     /* Shared Variables */
     unsigned int gameState;
     
+    unsigned int playersAwaited;
     player_t players[10];
     unsigned int numberOfPlayers;
     

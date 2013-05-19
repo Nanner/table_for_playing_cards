@@ -27,6 +27,7 @@ table_t* create_table(char* tableName, int tableSize) {
     //initialize data in the table structure
     table->gameState = CONTINUE_GAME;
     table->numberOfPlayers = 1;
+    table->playersAwaited = 0;
     table->currentTurn = 0;
     table->roundNumber = 0;
     table->dealerID = 0;
