@@ -162,3 +162,15 @@ void destroy_table(table_t* table, char* tableName, int tableSize) {
         exit(EXIT_FAILURE);
     }
 }
+
+bool check_if_player_exists(table_t* table, char* playerName) {
+    
+    int i;
+    for(i = 0; i < table->numberOfPlayers; i++) {
+        if(strcmp(table->players[i].nickname, playerName) == 0)
+            return true;
+    }
+    
+    return false;
+    
+}

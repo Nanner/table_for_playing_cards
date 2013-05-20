@@ -31,7 +31,9 @@ typedef struct {
     player_t players[10];
     unsigned int numberOfPlayers;
     
+    time_t turnStartTimestamp;
     unsigned int currentTurn;
+    time_t roundStartTimestamp;
     unsigned int roundNumber;
     
     unsigned int dealerID;
@@ -63,6 +65,8 @@ table_t* attach_table(char* tableName, int tableSize);
 bool init_sync_variables_in_table(table_t* table);
 
 void destroy_table(table_t* table, char* tableName, int tableSize);
+
+bool check_if_player_exists(table_t* table, char* playerName);
 
 #endif	/* TABLE_H */
 
