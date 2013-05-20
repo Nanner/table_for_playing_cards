@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #define DECK_CARDS 52
 
@@ -24,7 +25,7 @@ static const char suits[] = { 'c', 'd', 'h', 's' };
 
 void start_deck(card_t deck[]);
 
-int card_array_size(card_t deck[], int maxSize);
+int card_array_size(card_t cards[], int maxSize);
 
 bool deck_empty(card_t deck[]);
 
@@ -33,6 +34,8 @@ void shuffle_deck(card_t deck[]);
 void reorder_cards(card_t cards[], int numberOfCards);
 
 char* get_card_representation(card_t card);
+
+char* get_card_array_representation(card_t cards[], int numberOfCards);
 
 void print_cards(card_t cards[], int numberOfCards);
 

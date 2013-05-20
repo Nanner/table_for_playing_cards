@@ -18,7 +18,7 @@
 
 #define MAX_STRING_LENGTH 1024
 #define MAXIMUM_NUMBER_OF_PLAYERS 10
-#define HAND_CARDS 2
+#define HAND_CARDS 5
 
 typedef struct {
     unsigned int id;

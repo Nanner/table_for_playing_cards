@@ -3,8 +3,11 @@
 table_t* create_table(char* tableName, int tableSize) {
     int tableFD;
     table_t* table;
+    
+    char shmName[1024];
+    sprintf(shmName, "/%s", tableName);
 
-    tableFD = shm_open(tableName, O_CREAT | O_RDWR, 0660);
+    tableFD = shm_open(shmName, O_CREAT | O_RDWR, 0660);
 
     if (tableFD < 0) {
         perror("Failure on table %s creation (shm_open())\n");
@@ -26,6 +29,7 @@ table_t* create_table(char* tableName, int tableSize) {
 
     //initialize data in the table structure
     table->gameState = CONTINUE_GAME;
+    table->numberOfEvents = 0;
     table->numberOfPlayers = 1;
     table->playersAwaited = 0;
     table->currentTurn = 0;
@@ -42,9 +46,12 @@ table_t* create_table(char* tableName, int tableSize) {
 
 table_t* attach_table(char* tableName, int tableSize) {
 
+    char shmName[1024];
+    sprintf(shmName, "/%s", tableName);
+    
     int tableFD;
     table_t* table;
-    tableFD = shm_open(tableName, O_RDWR, 0660);
+    tableFD = shm_open(shmName, O_RDWR, 0660);
     if (tableFD < 0) {
         perror("Failure opening table");
         return NULL;
@@ -126,16 +133,31 @@ bool init_sync_variables_in_table(table_t* table) {
     if(pthread_cond_init(&table->dealingCardsCond, &dealingCardsCondAttr) != 0)
         return false;
     
+    pthread_mutexattr_t addingEventLockAttr;
+    
+    if(pthread_mutexattr_init(&addingEventLockAttr) != 0)
+        return false;
+    
+    if(pthread_mutexattr_setpshared(&addingEventLockAttr, PTHREAD_PROCESS_SHARED) != 0)
+        return false;
+    
+    if(pthread_mutex_init(&table->addingEventLock, &addingEventLockAttr) != 0)
+        return false;
+    
     return true;
 }
 
 void destroy_table(table_t* table, char* tableName, int tableSize) {
+    
+    char shmName[1024];
+    sprintf(shmName, "/%s", tableName);
+    
     if (munmap(table, tableSize) < 0) {
         perror("Failure in munmap()");
         exit(EXIT_FAILURE);
     }
 
-    if (shm_unlink(tableName) < 0) {
+    if (shm_unlink(shmName) < 0) {
         perror("Failure in shm_unlink()");
         exit(EXIT_FAILURE);
     }

@@ -14,12 +14,12 @@ void start_deck(card_t deck[]) {
 
 }
 
-int card_array_size(card_t deck[], int maxSize) {
+int card_array_size(card_t cards[], int maxSize) {
     int deckSize = 0;
 
     int i;
     for (i = 0; i < maxSize; i++)
-        if (deck[i] != usedCard)
+        if (cards[i] != usedCard)
             deckSize++;
 
     return deckSize;
@@ -69,6 +69,23 @@ void reorder_cards(card_t cards[], int numberOfCards) {
 char* get_card_representation(card_t card) {
     char* representation = malloc(2 * sizeof (char));
     sprintf(representation, "%s%c", ranks[card / 4], suits[card % 4]);
+    return representation;
+}
+
+char* get_card_array_representation(card_t cards[], int numberOfCards) {
+    char* representation = malloc(1024 * sizeof(char));
+    
+    int i;
+    for (i = 0; i < numberOfCards; i++) {
+        if (cards[i] != usedCard) {
+            char* cardName = get_card_representation(cards[i]);
+            strcat(representation, cardName);
+            free(cardName);
+            if (i != numberOfCards - 1)
+                strcat(representation, "-");
+        }
+    }
+    
     return representation;
 }
 

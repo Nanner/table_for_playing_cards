@@ -16,6 +16,7 @@
 
 #include "player.h"
 #include "card.h"
+#include "event.h"
 
 #define CONTINUE_GAME 1
 #define STOP_GAME 0
@@ -23,6 +24,8 @@
 typedef struct {
     /* Shared Variables */
     unsigned int gameState;
+    event_t eventList[MAX_EVENTS];
+    unsigned int numberOfEvents;
     
     unsigned int playersAwaited;
     player_t players[10];
@@ -50,6 +53,8 @@ typedef struct {
     
     pthread_mutex_t playerWaitLock;
     pthread_cond_t playerWaitCond;
+    
+    pthread_mutex_t addingEventLock;
 } table_t;
 
 table_t* create_table(char* tableName, int tableSize);
