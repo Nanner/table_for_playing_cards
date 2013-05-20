@@ -24,7 +24,9 @@
 
 #define MAX_LEN 1024
 #define MAX_EVENTS 1000
-#define LOG_FILE ".txt"
+#define LOG_FILE ".log"
+
+#define LOG_COLUMN_FORMAT "%-20s | %-20s | %-20s | %s\n"
 
 typedef struct {
     
@@ -51,6 +53,8 @@ char* get_event_representation(event_t event);
 void print_event(event_t event);
 
 void print_event_list(event_t events[], int numberOfEvents);
+
+void print_event_list_for_player(event_t events[], int numberOfEvents);
 
 void initialize_event_log(char * logname);
 

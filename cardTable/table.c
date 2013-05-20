@@ -32,7 +32,7 @@ table_t* create_table(char* tableName, int tableSize) {
     table->numberOfEvents = 0;
     table->numberOfPlayers = 1;
     table->playersAwaited = 0;
-    table->currentTurn = 0;
+    table->currentTurn = 1;
     table->roundNumber = 0;
     table->dealerID = 0;
     table->firstPlayerID = 0;

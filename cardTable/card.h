@@ -20,8 +20,12 @@ typedef int card_t;
 
 static const card_t usedCard = -1;
 
-static const char *ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+static char *ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 static const char suits[] = { 'c', 'd', 'h', 's' };
+
+char getSuit(card_t card);
+
+char* getRank(card_t card);
 
 void start_deck(card_t deck[]);
 
@@ -37,7 +41,11 @@ char* get_card_representation(card_t card);
 
 char* get_card_array_representation(card_t cards[], int numberOfCards);
 
+char* get_unordered_card_array_representation(card_t cards[], int numberOfCards);
+
 void print_cards(card_t cards[], int numberOfCards);
+
+void print_unordered_cards(card_t cards[], int numberOfCards);
 
 bool give_hand(card_t deck[], card_t hand[], int cardsToGive);
 

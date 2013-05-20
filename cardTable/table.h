@@ -44,7 +44,6 @@ typedef struct {
     unsigned int numberOfCardsOnTable;
 
     /* Sync Variables*/
-    //TODO Mutexes and stuff
     pthread_mutex_t dealingCardsLock;
     pthread_cond_t dealingCardsCond;
 

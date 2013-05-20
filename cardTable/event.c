@@ -14,29 +14,29 @@ char* get_event_representation(event_t event) {
     strftime(timeStamp, 80, "%F %T", dateinfo); //20
     
     if(strcmp(event.eventType, "deal") == 0) {
-        strcat(creator, "Dealer");
-        strcat(result, "-");
+        strcpy(creator, "Dealer");
+        strcpy(result, "-");
+        sprintf(creatorName, "%s-%s", creator, event.playerName);
     }
     else if(strcmp(event.eventType, "gameover") == 0) {
-        strcat(creator, "-");
-        strcat(result, "-");
+        strcpy(creatorName, "-");
+        strcpy(result, "-");
     }
     else if(strcmp(event.eventType, "table") == 0) {
-        strcat(creator, "-");
-        char* card_rep = get_card_array_representation(event.result, event.numberOfCardsInResult);
-        strcat(result, card_rep);
+        strcpy(creatorName, "-");
+        char* card_rep = get_unordered_card_array_representation(event.result, event.numberOfCardsInResult);
+        strcpy(result, card_rep);
         free(card_rep);
     }
     else {
         sprintf(creator, "Player%d", event.playerID);
         char* card_rep = get_card_array_representation(event.result, event.numberOfCardsInResult);
-        strcat(result, card_rep);
+        strcpy(result, card_rep);
         free(card_rep);
+        sprintf(creatorName, "%s-%s", creator, event.playerName);
     }
     
-    sprintf(creatorName, "%s-%s", creator, event.playerName);
-    
-    sprintf(representation, "%-20s | %-14s | %-14s | %s\n", timeStamp, creatorName, event.eventType, result);
+    sprintf(representation, LOG_COLUMN_FORMAT, timeStamp, creatorName, event.eventType, result);
     
     return representation;
 }
@@ -54,7 +54,17 @@ void print_event_list(event_t events[], int numberOfEvents) {
     int i;
     for(i = 0; i < numberOfEvents; i++) {
         print_event(events[i]);
-        printf("\n");
+    }
+    
+}
+
+void print_event_list_for_player(event_t events[], int numberOfEvents) {
+    
+    int i;
+    for(i = 0; i < numberOfEvents; i++) {
+        if(strcmp(events[i].eventType, "receive_cards") != 0) {
+                print_event(events[i]);
+        }
     }
     
 }
@@ -69,9 +79,9 @@ void initialize_event_log(char * logname){
     }
     
     char buffer[MAX_LEN];
-    sprintf(buffer, "%-20s | %-14s | %-14s | %s\n", "when", "who", "what", "result");
+    sprintf(buffer, LOG_COLUMN_FORMAT, "when", "who", "what", "result");
     
-    int len = (int)strlen(buffer)+1;
+    int len = (int)strlen(buffer);
     
     if ( write(file, buffer, len ) == -1){
         printf("Error writing to %s: %s\n", filename, strerror(errno));
@@ -90,7 +100,7 @@ void write_to_log(char * logname, event_t event){
     }
     
     char* eventRepresentation = get_event_representation(event);
-    int len = (int)strlen(eventRepresentation)+1;
+    int len = (int)strlen(eventRepresentation);
     if ( write(file, eventRepresentation, len) == -1){
         printf("Error writing to %s: %s\n", filename, strerror(errno));
     }
