@@ -57,7 +57,7 @@ void reorder_cards(card_t cards[], int numberOfCards) {
         }
     }
     
-    for(j; j < numberOfCards; j++)
+    for( ; j < numberOfCards; j++)
         buf[j] = usedCard;
     
     for(i = 0; i < numberOfCards; i++) {

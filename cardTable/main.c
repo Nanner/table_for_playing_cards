@@ -41,6 +41,7 @@ void add_event(char* eventType, card_t result[], int numberOfCardsInResult) {
     pthread_mutex_lock(&table->addingEventLock);
     table->eventList[table->numberOfEvents] = event;
     table->numberOfEvents++;
+    write_to_log(tableName, event);
     pthread_mutex_unlock(&table->addingEventLock);
 }
 
@@ -56,6 +57,7 @@ void add_event_without_result(char* eventType) {
     pthread_mutex_lock(&table->addingEventLock);
     table->eventList[table->numberOfEvents] = event;
     table->numberOfEvents++;
+    write_to_log(tableName, event);
     pthread_mutex_unlock(&table->addingEventLock);
 }
 
@@ -248,8 +250,12 @@ void* game_sync(void* arg) {
         /* Wait for a turn change before update */
         pthread_mutex_lock(&table->tableAccessLock);
         while (currentTurn == table->currentTurn) {
-            if (pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0)
+            if (pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0){
                 printf("Failed on cond wait for turnChangeCond!\n");
+                // TODO getting EINVAL here, fix please
+                sigint_handler(SIGINT);
+                exit(1);
+            }
         }
         pthread_mutex_unlock(&table->tableAccessLock);
         printf("Exited turn change wait\n");
@@ -329,6 +335,7 @@ int main(int argc, char *argv[]) {
     sprintf(semaphoreName, "%s_%s", TABLE_READY_SEM, argv[2]);
     
     /*
+     // to clean up when we program crashes
     table_ready = sem_open(semaphoreName, O_CREAT , 0600, 0);
     sem_close(table_ready);
     sem_unlink(TABLE_READY_SEM);
@@ -404,6 +411,8 @@ int main(int argc, char *argv[]) {
         pthread_mutex_lock(&table->playerWaitLock);
         while (table->numberOfPlayers < playersAwaited)
             pthread_cond_wait(&table->playerWaitCond, &table->playerWaitLock);
+        
+        initialize_event_log(tableName);
         
         // After all players are in game, deal cards and decide the first player to play
         deal_cards();

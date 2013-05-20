@@ -36,7 +36,7 @@ char* get_event_representation(event_t event) {
     
     sprintf(creatorName, "%s-%s", creator, event.playerName);
     
-    sprintf(representation, "%-20s|%-14s|%-14s|%s", timeStamp, creatorName, event.eventType, result);
+    sprintf(representation, "%-20s | %-14s | %-14s | %s\n", timeStamp, creatorName, event.eventType, result);
     
     return representation;
 }
@@ -57,4 +57,44 @@ void print_event_list(event_t events[], int numberOfEvents) {
         printf("\n");
     }
     
+}
+
+void initialize_event_log(char * logname){
+    char filename[MAX_LEN];
+    strcpy(filename, logname);
+    strcat(filename, LOG_FILE);
+    int file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    if (file == -1) {
+  		perror(filename);
+    }
+    
+    char buffer[MAX_LEN];
+    sprintf(buffer, "%-20s | %-14s | %-14s | %s\n", "when", "who", "what", "result");
+    
+    int len = (int)strlen(buffer)+1;
+    
+    if ( write(file, buffer, len ) == -1){
+        printf("Error writing to %s: %s\n", filename, strerror(errno));
+    }
+    
+    close(file);
+}
+
+void write_to_log(char * logname, event_t event){
+    char filename[MAX_LEN];
+    strcpy(filename, logname);
+    strcat(filename, LOG_FILE);
+    int file = open(filename, O_WRONLY | O_APPEND, 0600);
+    if (file == -1) {
+  		perror(filename);
+    }
+    
+    char* eventRepresentation = get_event_representation(event);
+    int len = (int)strlen(eventRepresentation)+1;
+    if ( write(file, eventRepresentation, len) == -1){
+        printf("Error writing to %s: %s\n", filename, strerror(errno));
+    }
+    free(eventRepresentation);
+    
+    close(file);
 }

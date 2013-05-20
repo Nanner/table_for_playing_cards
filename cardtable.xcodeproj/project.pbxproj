@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EB77B4491741352D0014648F /* card.c in Sources */ = {isa = PBXBuildFile; fileRef = EB77B4431741352D0014648F /* card.c */; };
-		EB77B44A1741352D0014648F /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = EB77B4451741352D0014648F /* player.c */; };
-		EB77B44B1741352D0014648F /* table.c in Sources */ = {isa = PBXBuildFile; fileRef = EB77B4471741352D0014648F /* table.c */; };
-		EB77B44D174135760014648F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = EB77B44C174135760014648F /* main.c */; };
+		EB7710DD174A0F6D00221740 /* card.c in Sources */ = {isa = PBXBuildFile; fileRef = EB7710D3174A0F6D00221740 /* card.c */; };
+		EB7710DE174A0F6D00221740 /* event.c in Sources */ = {isa = PBXBuildFile; fileRef = EB7710D5174A0F6D00221740 /* event.c */; };
+		EB7710DF174A0F6D00221740 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = EB7710D7174A0F6D00221740 /* main.c */; };
+		EB7710E0174A0F6D00221740 /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = EB7710D9174A0F6D00221740 /* player.c */; };
+		EB7710E1174A0F6D00221740 /* table.c in Sources */ = {isa = PBXBuildFile; fileRef = EB7710DB174A0F6D00221740 /* table.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,15 +27,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		EB5F27351743985C00B17D6E /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		EB7710D3174A0F6D00221740 /* card.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = card.c; sourceTree = "<group>"; };
+		EB7710D4174A0F6D00221740 /* card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = card.h; sourceTree = "<group>"; };
+		EB7710D5174A0F6D00221740 /* event.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = event.c; sourceTree = "<group>"; };
+		EB7710D6174A0F6D00221740 /* event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = event.h; sourceTree = "<group>"; };
+		EB7710D7174A0F6D00221740 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		EB7710D8174A0F6D00221740 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		EB7710D9174A0F6D00221740 /* player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = player.c; sourceTree = "<group>"; };
+		EB7710DA174A0F6D00221740 /* player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
+		EB7710DB174A0F6D00221740 /* table.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = table.c; sourceTree = "<group>"; };
+		EB7710DC174A0F6D00221740 /* table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table.h; sourceTree = "<group>"; };
 		EB77B436174134CF0014648F /* cardtable */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cardtable; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB77B4431741352D0014648F /* card.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = card.c; sourceTree = "<group>"; };
-		EB77B4441741352D0014648F /* card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = card.h; sourceTree = "<group>"; };
-		EB77B4451741352D0014648F /* player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = player.c; sourceTree = "<group>"; };
-		EB77B4461741352D0014648F /* player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
-		EB77B4471741352D0014648F /* table.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = table.c; sourceTree = "<group>"; };
-		EB77B4481741352D0014648F /* table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table.h; sourceTree = "<group>"; };
-		EB77B44C174135760014648F /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,14 +70,16 @@
 		EB77B4421741352D0014648F /* cardTable */ = {
 			isa = PBXGroup;
 			children = (
-				EB77B44C174135760014648F /* main.c */,
-				EB5F27351743985C00B17D6E /* main.h */,
-				EB77B4431741352D0014648F /* card.c */,
-				EB77B4441741352D0014648F /* card.h */,
-				EB77B4451741352D0014648F /* player.c */,
-				EB77B4461741352D0014648F /* player.h */,
-				EB77B4471741352D0014648F /* table.c */,
-				EB77B4481741352D0014648F /* table.h */,
+				EB7710D3174A0F6D00221740 /* card.c */,
+				EB7710D4174A0F6D00221740 /* card.h */,
+				EB7710D5174A0F6D00221740 /* event.c */,
+				EB7710D6174A0F6D00221740 /* event.h */,
+				EB7710D7174A0F6D00221740 /* main.c */,
+				EB7710D8174A0F6D00221740 /* main.h */,
+				EB7710D9174A0F6D00221740 /* player.c */,
+				EB7710DA174A0F6D00221740 /* player.h */,
+				EB7710DB174A0F6D00221740 /* table.c */,
+				EB7710DC174A0F6D00221740 /* table.h */,
 			);
 			path = cardTable;
 			sourceTree = "<group>";
@@ -130,10 +135,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB77B4491741352D0014648F /* card.c in Sources */,
-				EB77B44A1741352D0014648F /* player.c in Sources */,
-				EB77B44B1741352D0014648F /* table.c in Sources */,
-				EB77B44D174135760014648F /* main.c in Sources */,
+				EB7710DD174A0F6D00221740 /* card.c in Sources */,
+				EB7710DE174A0F6D00221740 /* event.c in Sources */,
+				EB7710DF174A0F6D00221740 /* main.c in Sources */,
+				EB7710E0174A0F6D00221740 /* player.c in Sources */,
+				EB7710E1174A0F6D00221740 /* table.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

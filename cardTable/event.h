@@ -12,8 +12,19 @@
 #include <time.h>
 #include <string.h>
 
+// read
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+// write
+#include <unistd.h>
+
+#include <errno.h>
+
 #define MAX_LEN 1024
 #define MAX_EVENTS 1000
+#define LOG_FILE ".txt"
 
 typedef struct {
     
@@ -40,6 +51,10 @@ char* get_event_representation(event_t event);
 void print_event(event_t event);
 
 void print_event_list(event_t events[], int numberOfEvents);
+
+void initialize_event_log(char * logname);
+
+void write_to_log(char * logname, event_t event);
 
 #endif	/* EVENT_H */
 
