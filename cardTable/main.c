@@ -76,6 +76,7 @@ void check_turn_elapsed_time() {
     time_t currentTime = time(NULL);
     pthread_mutex_lock(&table->tableAccessLock);
     double seconds = difftime(currentTime, table->turnStartTimestamp);
+    printf("Player %d's turn\n", table->currentTurn);
     pthread_mutex_unlock(&table->tableAccessLock);
     printf("%.2g seconds elapsed since turn start\n", seconds);
 }
@@ -84,6 +85,7 @@ void check_round_elapsed_time() {
     time_t currentTime = time(NULL);
     pthread_mutex_lock(&table->tableAccessLock);
     double seconds = difftime(currentTime, table->roundStartTimestamp);
+    printf("Round %d\n", table->roundNumber);
     pthread_mutex_unlock(&table->tableAccessLock);
     printf("%.2g seconds elapsed since round start\n", seconds);
 }
@@ -249,12 +251,21 @@ void* game_interface(void* arg) {
                     printf("\n");
                 } else
                     printf("There are no cards on the table!\n");
+                
+                printf("Press enter to continue.\n");
+                getchar();
                 break;
             case 4:
                 check_turn_elapsed_time();
+                
+                printf("Press enter to continue.\n");
+                getchar();
                 break;
             case 5:
                 check_round_elapsed_time();
+                
+                printf("Press enter to continue.\n");
+                getchar();
                 break;
             case 6:
                 play_card();
