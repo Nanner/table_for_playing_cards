@@ -344,31 +344,11 @@ void* game_sync(void* arg) {
 }
 
 int main(int argc, char *argv[]) {
-    
-    /*event_t testEvent;
-    strcpy(testEvent.eventType, "deal");
-    testEvent.numberOfCardsInResult = 0;
-    testEvent.playerID = 0;
-    strcpy(testEvent.playerName, "Manuel");
-    //testEvent.result = NULL;
-    testEvent.timeStamp = time(NULL);
-    
-    print_event(testEvent);
-    return;*/
-    
-    /*
-    card_t baralhoFixe[DECK_CARDS];
-    start_deck(baralhoFixe);
-    print_cards(baralhoFixe, DECK_CARDS);
-    return;
-    */
 
     if (argc != 4) {
         printf("Wrong usage: cardTable <player's name> <shm name> <n. players>\n");
         return -1;
     }
-    
-    //TODO check if names already exist
 
     // Get necessary variables from the arguments
     sprintf(fifoName, "%s_%s", argv[2], argv[1]);
@@ -377,15 +357,6 @@ int main(int argc, char *argv[]) {
     strcpy(tableName, argv[2]);
     playersAwaited = atoi(argv[3]);
     sprintf(semaphoreName, "%s_%s", TABLE_READY_SEM, argv[2]);
-    
-    /*
-     // to clean up when we program crashes
-    table_ready = sem_open(semaphoreName, O_CREAT , 0600, 0);
-    sem_close(table_ready);
-    sem_unlink(TABLE_READY_SEM);
-    destroy_table(table, tableName, sizeof (table_t));
-    return 0;
-     */
 
     // Try to open the table_ready semaphore. If it doesn't exist, you are the dealer, if it does, you're a player
     table_ready = sem_open(semaphoreName, O_CREAT | O_EXCL, 0600, 0);
