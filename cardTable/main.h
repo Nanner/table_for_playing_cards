@@ -46,5 +46,6 @@ static unsigned int numberOfCardsOnTable;
 
 static card_t handCards[HAND_CARDS];
 
+int getChoice(const char *prompt, int maxChoice);
 
 #endif

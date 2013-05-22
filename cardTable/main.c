@@ -101,7 +101,7 @@ void play_card() {
     // Ask for the card to play, or give option to go back
     char prompt[MAX_LEN];
     sprintf(prompt, "Choose a card to play: (1 to %d, 0 to go back)\n> ", card_array_size(handCards, HAND_CARDS));
-    int choice = getChoice(prompt, HAND_CARDS);
+    int choice = getChoice(prompt, card_array_size(handCards, HAND_CARDS));
     
     if(choice == 0)
         return;

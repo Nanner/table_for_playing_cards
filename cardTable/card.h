@@ -18,10 +18,7 @@
 
 typedef int card_t;
 
-static const card_t usedCard = -1;
-
-static char *ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-static const char suits[] = { 'c', 'd', 'h', 's' };
+extern const int usedCard;
 
 char getSuit(card_t card);
 

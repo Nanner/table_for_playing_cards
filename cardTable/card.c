@@ -1,5 +1,10 @@
 #include "card.h"
 
+char *ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+const char suits[] = { 'c', 'd', 'h', 's' };
+
+const card_t usedCard = -1;
+
 int compare_cards(const void* a, const void* b) {
     return ( *(int*)a - *(int*)b );
 }
