@@ -11,7 +11,6 @@
 #ifndef EVENT_H
 #define	EVENT_H
 
-#include "card.h"
 #include <time.h>
 #include <string.h>
 
@@ -24,6 +23,8 @@
 #include <unistd.h>
 
 #include <errno.h>
+
+#include "card.h"
 
 #define MAX_LEN 1024
 #define MAX_EVENTS 1000

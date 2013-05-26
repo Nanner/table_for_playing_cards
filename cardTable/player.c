@@ -8,7 +8,6 @@ int create_player_fifo(char* fifoName) {
         return -1;
     }
     
-    //TODO why does it only work with O_NONBLOCK?
     if( (fd = open(fifoName, O_RDONLY | O_NONBLOCK)) == -1) {
         perror("Problem opening fifo");
         return -1;
