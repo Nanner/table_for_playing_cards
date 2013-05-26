@@ -83,6 +83,12 @@ void reorder_used_cards(card_t cards[], int numberOfCards) {
     
 }
 
+void sort_cards(card_t cards[], int numberOfCards) {
+    
+    qsort(cards, numberOfCards, sizeof(card_t), compare_cards);
+    
+}
+
 char* get_card_representation(card_t card) {
     char* representation = malloc(2 * sizeof (char));
     sprintf(representation, "%s%c", getRank(card), getSuit(card));
@@ -96,27 +102,20 @@ char* get_card_array_representation(card_t cards[], int numberOfCards) {
         strcpy(representation, "-");
     }
     
-    card_t sortedCards[numberOfCards];
+    char currentSuit;
     int j;
     for(j = 0; j < numberOfCards; j++) {
-        sortedCards[j] = cards[j];
-    }
-    
-    qsort(sortedCards, numberOfCards, sizeof(card_t), compare_cards);
-    
-    char currentSuit;
-    for(j = 0; j < numberOfCards; j++) {
-        if(sortedCards[j] != usedCard) {
-            currentSuit = getSuit(sortedCards[j]);
+        if(cards[j] != usedCard) {
+            currentSuit = getSuit(cards[j]);
             break;
         }
     }
     
     int i;
     for (i = 0; i < numberOfCards; i++) {
-        if (sortedCards[i] != usedCard) {
+        if (cards[i] != usedCard) {
             if( i > 0 ) {
-                char suit = getSuit(sortedCards[i]);
+                char suit = getSuit(cards[i]);
                 if(suit != currentSuit) {
                     currentSuit = suit;
                     strcat(representation, "/");
@@ -125,7 +124,7 @@ char* get_card_array_representation(card_t cards[], int numberOfCards) {
                     strcat(representation, "-");
             }
             
-            char* cardName = get_card_representation(sortedCards[i]);
+            char* cardName = get_card_representation(cards[i]);
             if(i == 0)
                 strcpy(representation, cardName);
             else

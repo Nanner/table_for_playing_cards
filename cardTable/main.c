@@ -122,6 +122,7 @@ void play_card() {
     // Removing the played card from the hand cards and reordering it for array access purposes
     handCards[choice-1] = usedCard;
     reorder_used_cards(handCards, HAND_CARDS);
+    sort_cards(handCards, card_array_size(handCards, HAND_CARDS));
     add_event("hand", handCards , card_array_size(handCards, HAND_CARDS));
    
     // Updating current turn
@@ -441,8 +442,9 @@ int main(int argc, char *argv[]) {
         
         printf("First one to play is player %d!\n", table->firstPlayerID);
         
-        // Get dealt hand from the player FIFO
+        // Get dealt hand from the player FIFO and sort it
         get_hand_from_fifo(fifoFD, handCards, HAND_CARDS);
+        sort_cards(handCards, card_array_size(handCards, HAND_CARDS));
         add_event("receive_cards", handCards , HAND_CARDS);
         
         // Start turn and round timestamp
@@ -537,8 +539,9 @@ int main(int argc, char *argv[]) {
         
         initialize_local_variables();
         
-        // Get card hand dealt from player FIFO
+        // Get card hand dealt from player FIFO and sort it
         get_hand_from_fifo(fifoFD, handCards, HAND_CARDS);
+        sort_cards(handCards, card_array_size(handCards, HAND_CARDS));
         add_event("receive_cards", handCards , HAND_CARDS);
         
         pthread_mutex_unlock(&table->dealingCardsLock);

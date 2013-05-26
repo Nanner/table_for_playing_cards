@@ -74,6 +74,13 @@ void shuffle_deck(card_t deck[]);
 void reorder_used_cards(card_t cards[], int numberOfCards);
 
 /**
+ * Sorts cards by rank and suit.
+ * @param cards Cards to sort
+ * @param numberOfCards Number of cards to sort
+ */
+void sort_cards(card_t cards[], int numberOfCards);
+
+/**
  * @param card The card that will be represented.
  * @return A string with the representation of a given card (rank and suit).
  */
