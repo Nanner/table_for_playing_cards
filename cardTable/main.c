@@ -122,7 +122,7 @@ void play_card() {
     
     // Removing the played card from the hand cards and reordering it for array access purposes
     handCards[choice-1] = usedCard;
-    reorder_cards(handCards, HAND_CARDS);
+    reorder_used_cards(handCards, HAND_CARDS);
     add_event("hand", handCards , card_array_size(handCards, HAND_CARDS));
    
     // Updating current turn
