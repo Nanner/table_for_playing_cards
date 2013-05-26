@@ -61,7 +61,7 @@ void shuffle_deck(card_t deck[]) {
     }
 }
 
-void reorder_cards(card_t cards[], int numberOfCards) {
+void reorder_used_cards(card_t cards[], int numberOfCards) {
     
     card_t buf[numberOfCards];
     
