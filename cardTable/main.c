@@ -1,5 +1,4 @@
 #include "main.h"
-#include "event.h"
 
 void sigint_handler(int signo) {
     close_player_fifo(fifoFD, fifoName);

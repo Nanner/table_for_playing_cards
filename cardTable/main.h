@@ -21,6 +21,7 @@
 #include <signal.h>
 
 #include "table.h"
+#include "event.h"
 
 #define TABLE_READY_SEM "/table_ready"
 #define MAX_LEN 1024
