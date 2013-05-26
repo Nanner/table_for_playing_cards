@@ -1,9 +1,12 @@
-/* 
- * File:   player.h
- * Author: nanner
- *
- * Created on May 9, 2013, 7:08 PM
- */
+//  player.h
+//
+//  SOPE Project 2 - Table for Playing Cards
+//
+//  Turma 1 Grupo 5
+//
+//  ei11089 - Diogo Santos
+//  ei11122 - Pedro Fernandes
+//
 
 #ifndef PLAYER_H
 #define	PLAYER_H
@@ -18,7 +21,7 @@
 
 #define MAX_STRING_LENGTH 1024
 #define MAXIMUM_NUMBER_OF_PLAYERS 10
-#define HAND_CARDS 2
+#define HAND_CARDS 5
 
 typedef struct {
     unsigned int id;

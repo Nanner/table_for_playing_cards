@@ -62,7 +62,7 @@ void print_event_list_for_player(event_t events[], int numberOfEvents) {
     
     int i;
     for(i = 0; i < numberOfEvents; i++) {
-        if(strcmp(events[i].eventType, "receive_cards") != 0) {
+        if( (strcmp(events[i].eventType, "receive_cards") != 0) && (strcmp(events[i].eventType, "hand") != 0) ) {
                 print_event(events[i]);
         }
     }

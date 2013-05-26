@@ -1,8 +1,6 @@
 #include "main.h"
 #include "event.h"
 
-//TODO add missing functions to header
-
 void sigint_handler(int signo) {
     close_player_fifo(fifoFD, fifoName);
     
@@ -78,7 +76,7 @@ void check_turn_elapsed_time() {
     double seconds = difftime(currentTime, table->turnStartTimestamp);
     printf("Player %d's turn\n", table->currentTurn);
     pthread_mutex_unlock(&table->tableAccessLock);
-    printf("%.2g seconds elapsed since turn start\n", seconds);
+    printf("%.0f seconds elapsed since turn start\n", seconds);
 }
 
 void check_round_elapsed_time() {
@@ -87,7 +85,7 @@ void check_round_elapsed_time() {
     double seconds = difftime(currentTime, table->roundStartTimestamp);
     printf("Round %d\n", table->roundNumber);
     pthread_mutex_unlock(&table->tableAccessLock);
-    printf("%.2g seconds elapsed since round start\n", seconds);
+    printf("%.0f seconds elapsed since round start\n", seconds);
 }
 
 
@@ -295,7 +293,6 @@ void* game_sync(void* arg) {
         while (currentTurn == table->currentTurn) {
             if (pthread_cond_wait(&table->turnChangeCond, &table->tableAccessLock) != 0){
                 printf("Failed on cond wait for turnChangeCond!\n");
-                // TODO getting EINVAL here, fix please
                 sigint_handler(SIGINT);
                 exit(1);
             }
@@ -351,11 +348,15 @@ int main(int argc, char *argv[]) {
     }
 
     // Get necessary variables from the arguments
+    playersAwaited = atoi(argv[3]);
+    if(playersAwaited < 1) {
+        printf("Invalid number of players! You need at least one on the table.\n");
+        return -1;
+    }
     sprintf(fifoName, "%s_%s", argv[2], argv[1]);
     strcpy(player.nickname, argv[1]);
     strcpy(player.fifoName, fifoName);
     strcpy(tableName, argv[2]);
-    playersAwaited = atoi(argv[3]);
     sprintf(semaphoreName, "%s_%s", TABLE_READY_SEM, argv[2]);
 
     // Try to open the table_ready semaphore. If it doesn't exist, you are the dealer, if it does, you're a player
