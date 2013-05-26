@@ -1,9 +1,12 @@
-/* 
- * File:   event.h
- * Author: nanner
- *
- * Created on May 20, 2013, 1:39 AM
- */
+//  event.h
+//
+//  SOPE Project 2 - Table for Playing Cards
+//
+//  Turma 1 Grupo 5
+//
+//  ei11089 - Diogo Santos
+//  ei11122 - Pedro Fernandes
+//
 
 #ifndef EVENT_H
 #define	EVENT_H

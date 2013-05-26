@@ -1,9 +1,12 @@
-/* 
- * File:   card.h
- * Author: nanner
- *
- * Created on May 9, 2013, 7:22 PM
- */
+//  card.h
+//
+//  SOPE Project 2 - Table for Playing Cards
+//
+//  Turma 1 Grupo 5
+//
+//  ei11089 - Diogo Santos
+//  ei11122 - Pedro Fernandes
+//
 
 #ifndef CARD_H
 #define	CARD_H
