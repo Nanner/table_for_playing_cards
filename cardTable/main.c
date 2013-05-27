@@ -104,7 +104,9 @@ void play_card() {
         return;
     
     // Show the card being played
-    printf("Playing card %s\n", get_card_representation(handCards[choice-1]));
+    char* cardPlayedRepresentation = get_card_representation(handCards[choice-1]);
+    printf("Playing card %s\n", cardPlayedRepresentation);
+    free(cardPlayedRepresentation);
     
     // Lock table access mutex and local mutex for synch purposes
     pthread_mutex_lock(&table->tableAccessLock);
