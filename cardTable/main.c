@@ -355,6 +355,12 @@ int main(int argc, char *argv[]) {
         printf("Invalid number of players! You need at least one on the table.\n");
         return -1;
     }
+    
+    if( (playersAwaited * HAND_CARDS) > DECK_CARDS ) {
+        printf("There are not enough cards on the deck for everyone, please play with less players!\n");
+        return -1;
+    }
+    
     sprintf(fifoName, "%s_%s", argv[2], argv[1]);
     strcpy(player.nickname, argv[1]);
     strcpy(player.fifoName, fifoName);
